@@ -1,0 +1,30 @@
+name: Link check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  link-check:
+    name: Check relative links
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Check links with lychee (offline, relative links only)
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # --offline checks only local/relative links, so the check is fast and
+          # does not fail because an external site is slow or blocks bots.
+          args: >-
+            --offline
+            --no-progress
+            --verbose
+            './**/*.md'
+          fail: true
